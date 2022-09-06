@@ -3,6 +3,7 @@ module Page.CosineSimilarity exposing (Data, Model, Msg, page)
 import Array
 import DataSource exposing (DataSource)
 import DataSource.Port as Dport
+import Dict exposing (Dict)
 import Head
 import Head.Seo as Seo
 import Html exposing (..)
@@ -25,6 +26,11 @@ import View exposing (View)
 link_katex : Html Msg
 link_katex =
     node "link" [ rel "stylesheet", href "katex.min.css" ] []
+
+
+link_hl_js_styles : Html Msg
+link_hl_js_styles =
+    node "link" [ rel "stylesheet", href "github-dark.css" ] []
 
 
 type alias Model =
@@ -52,19 +58,28 @@ type alias Data =
     List String
 
 
+formula_and_code_lookup : Dict String String
+formula_and_code_lookup =
+    Dict.fromList
+        [ ( "cosine-formula", "cos(\\theta) = \\frac{x y}{\\Vert x \\Vert \\cdot \\Vert y \\Vert}" )
+        ]
+
+
+get_katex_html latex_formula =
+    Dport.get "parse_katex"
+        (Encode.string latex_formula)
+        Decode.string
+
+
 data : DataSource Data
 data =
     DataSource.combine
-        [ Dport.get "parse_katex"
-            (Encode.string """cos(\\theta) = \\frac{x y}{\\Vert x \\Vert \\cdot \\Vert y \\Vert}""")
-            Decode.string
-        , Dport.get "parse_katex"
-            (Encode.string """A = \\begin{bmatrix*}[r]
+        [ get_katex_html (Maybe.withDefault "" <| Dict.get "cosine-formula" formula_and_code_lookup)
+        , get_katex_html """A = \\begin{bmatrix*}[r]
 a & b \\\\
 c & d
-\\end{bmatrix*}""")
-            Decode.string
-        , Dport.get "parse_katex" (Encode.string """
+\\end{bmatrix*}"""
+        , get_katex_html """
 AA^T = \\begin{bmatrix}
 a & b \\\\
 c & d
@@ -77,14 +92,14 @@ ca+db & c^2+d^2
 \\end{bmatrix} = \\begin{bmatrix}
 x x & xy \\\\
 yx & yy
-\\end{bmatrix}""") Decode.string
-        , Dport.get "parse_katex" (Encode.string """A^2 = \\begin{bmatrix}
+\\end{bmatrix}"""
+        , get_katex_html """A^2 = \\begin{bmatrix}
 a & b \\\\
 c & d
 \\end{bmatrix}^{ \\circ 2} = \\begin{bmatrix}
 a^2 & b^2 \\\\
 c^2 & d^2
-\\end{bmatrix}""") Decode.string
+\\end{bmatrix}"""
         , Dport.get "parse_katex" (Encode.string """b = \\begin{bmatrix}
 \\sqrt{a^2 + b^2} \\\\
 \\sqrt{c^2 + d^2}
@@ -102,6 +117,7 @@ c^2 & d^2
 |x|\\cdot |y| & |y|^2
 \\end{bmatrix}""") Decode.string
         , Dport.get "parse_katex" (Encode.string """S = A \\circledast \\frac{1}{B}""") Decode.string
+        , Dport.get "highlight_python" (Encode.string "print('hello world')") Decode.string
         ]
 
 
@@ -145,7 +161,7 @@ view maybeUrl sharedModel static =
                 static.data
     in
     { title = "Cosine Similarity"
-    , body = [ link_katex, body formulas ]
+    , body = [ link_katex, link_hl_js_styles, body formulas ]
     }
 
 
@@ -354,6 +370,12 @@ body formulas =
                 , case Array.get 6 from_arr of
                     Just val ->
                         div [] val
+
+                    Nothing ->
+                        div [] [ text "" ]
+                , case Array.get 7 from_arr of
+                    Just val ->
+                        pre [] [ code [] val ]
 
                     Nothing ->
                         div [] [ text "" ]

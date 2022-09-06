@@ -1,4 +1,6 @@
 const katex = require('katex')
+const hljs = require('highlight.js/lib/common') 
+
 module.exports = {
     /**
        * @param { unknown } fromElm
@@ -12,6 +14,10 @@ module.exports = {
         })
         return val
     },
+    highlight_python: async function (code) {
+        const code_html = hljs.highlight(code, {language: 'python'}).value 
+        return code_html
+    }, 
 
     /**
        * @param { unknown } fromElm

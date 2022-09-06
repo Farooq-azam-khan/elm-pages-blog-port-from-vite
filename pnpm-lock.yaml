@@ -6,10 +6,12 @@ specifiers:
   elm-pages: 2.1.10
   elm-review: ^2.5.5
   elm-tooling: ^1.4.0
+  highlight.js: ^11.6.0
   katex: ^0.16.2
   tailwindcss: ^3.1.8
 
 dependencies:
+  highlight.js: 11.6.0
   katex: 0.16.2
 
 devDependencies:
@@ -1191,6 +1193,11 @@ packages:
     dependencies:
       function-bind: 1.1.1
     dev: true
+
+  /highlight.js/11.6.0:
+    resolution: {integrity: sha512-ig1eqDzJaB0pqEvlPVIpSSyMaO92bH1N2rJpLMN/nX396wTpDA4Eq0uK+7I/2XG17pFaaKE0kjV/XPeGt7Evjw==}
+    engines: {node: '>=12.0.0'}
+    dev: false
 
   /http-cache-semantics/4.1.0:
     resolution: {integrity: sha512-carPklcUh7ROWRK7Cv27RPtdhYhUsela/ue5/jKzjegVvXDqM2ILE9Q2BGn9JZJh1g87cp56su/FgQSzcWS8cQ==}
