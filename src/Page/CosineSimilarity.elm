@@ -18,6 +18,15 @@ import Shared
 import View exposing (View)
 
 
+
+-- <link rel="stylesheet" href="mystyle.css">
+
+
+link_katex : Html Msg
+link_katex =
+    node "link" [ rel "stylesheet", href "katex.min.css" ] []
+
+
 type alias Model =
     ()
 
@@ -50,10 +59,10 @@ data =
             (Encode.string """cos(\\theta) = \\frac{x y}{\\Vert x \\Vert \\cdot \\Vert y \\Vert}""")
             Decode.string
         , Dport.get "parse_katex"
-            (Encode.string """A = \\begin{bmatrix}
+            (Encode.string """A = \\begin{bmatrix*}[r]
 a & b \\\\
 c & d
-\\end{bmatrix}""")
+\\end{bmatrix*}""")
             Decode.string
         , Dport.get "parse_katex" (Encode.string """
 AA^T = \\begin{bmatrix}
@@ -136,7 +145,7 @@ view maybeUrl sharedModel static =
                 static.data
     in
     { title = "Cosine Similarity"
-    , body = [ body formulas ]
+    , body = [ link_katex, body formulas ]
     }
 
 
