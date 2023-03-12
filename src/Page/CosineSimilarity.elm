@@ -117,7 +117,7 @@ c^2 & d^2
 |x|\\cdot |y| & |y|^2
 \\end{bmatrix}""") Decode.string
         , Dport.get "parse_katex" (Encode.string """S = A \\circledast \\frac{1}{B}""") Decode.string
-        , Dport.get "highlight_python" (Encode.string "print('hello world')") Decode.string
+--        , Dport.get "highlight_python" (Encode.string "print('hello world')") Decode.string
         ]
 
 
